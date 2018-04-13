@@ -16,7 +16,7 @@ class SubtitleEditor extends Component {
     const subtitle = subtitles[videoId] || [];
     return (
       <div>
-        <button onClick={this.add.bind(this)}>click me for subtitle!</button>
+        <button onClick={this.add.bind(this)}>click me to add subtitle</button>
         <ul>
         {
           subtitle.map(({ time, text }, index) => (
