@@ -42,7 +42,7 @@ class SubtitleDisplay extends Component {
     if (!videoId) return null;
     const subtitle = subtitles[videoId] || [];
     return (
-      <div style={{height: 200, overflow: 'scroll'}}>
+      <div style={{height: "100%", overflow: 'scroll'}}>
         {
           subtitle.map((line, index) => {
             const nextTime = !subtitle[index + 1] ? duration : subtitle[index + 1].time;

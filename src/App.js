@@ -23,10 +23,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <YoutubeApp src={this.state.src} >
+        <YoutubeApp src={this.state.src} width={640} height={360}>
           <SimpleControl />
-          <SubtitleEditor />
-          <SubtitleDisplay />
+          <SubtitleEditor />       
+          <SubtitleDisplay position="right"/>
         </YoutubeApp>
         <button onClick={() => this.setState({
             src: getSource()

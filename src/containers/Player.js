@@ -4,6 +4,12 @@ import { connect } from 'react-redux';
 import { loadYoutubeSDK } from '../utils';
 import { setPlayer, setPlay, setPause, setEnded, setTime, setDuration, setVideoId } from '../reducers/player';
 
+const propsToContainerStyle = (props) => ({
+  position: 'relative',
+  width: props.width,
+  height: props.height,
+});
+
 class Player extends Component {
   constructor(props) {
     super(props);
@@ -30,19 +36,35 @@ class Player extends Component {
     this.props.setVideoId(this.props.videoId);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { videoId: prevId } = prevProps;
+    const { videoId } = this.props;
+    if (videoId !== prevId) {
+      this.player.loadVideoById(videoId, 0, "large");
+      this.setState({
+        durationPolling: setInterval(this.pollDuration)
+      });
+      this.props.setVideoId(videoId);
+    }
+  }
+
   render() {
+    const { width, height, children } = this.props;
     return (
-      <div>
+      <div style={propsToContainerStyle({ width, height })}>
         <div id="player">
         </div>
+        {
+          children
+        }
       </div>
     );
   }
 
   setPlayer(YT) {
     this.player = new YT.Player("player", {
-      height: "390",
-      width: "640",
+      height: this.props.height,
+      width: this.props.width,
       videoId: this.props.videoId,
       events: {
         "onReady": this.onPlayerReady,
@@ -109,18 +131,6 @@ class Player extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { videoId: prevId } = prevProps;
-    const { videoId } = this.props;
-    if (videoId !== prevId ) {
-      this.player.loadVideoById(videoId, 0, "large");
-      this.setState({
-        durationPolling: setInterval(this.pollDuration)
-      });
-      this.props.setVideoId(videoId);
-    } 
-  }
-
   onPlay() {
     this.props.setPlay()
     this.getTime();
@@ -147,6 +157,11 @@ function mapDispatchToProps(dispatch) {
     setDuration: compose(dispatch, setDuration),
     setVideoId: compose(dispatch, setVideoId),
   }
+}
+
+Player.defaultProps = {
+  height: 360,
+  width: 640
 }
 
 export default connect(undefined, mapDispatchToProps)(Player);
